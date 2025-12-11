@@ -249,12 +249,30 @@ def close_resolved_issues():
         comment_data = {
             'body': "✅ GitHub Pages is now correctly configured! Your dashboard should be accessible at the correct URL. Closing this issue automatically."
         }
-        requests.post(comment_url, headers=headers, json=comment_data)
+        comment_response = requests.post(comment_url, headers=headers, json=comment_data)
+        if comment_response.status_code not in [200, 201]:
+            print(f"WARNING: Failed to add comment to issue #{issue_number}: {comment_response.status_code}")
         
         # Close the issue
         update_url = f'https://api.github.com/repos/{REPO}/issues/{issue_number}'
         update_data = {'state': 'closed'}
-        requests.patch(update_url, headers=headers, json=update_data)
+        close_response = requests.patch(update_url, headers=headers, json=update_data)
+        if close_response.status_code != 200:
+            print(f"ERROR: Failed to close issue #{issue_number}: {close_response.status_code}")
+        else:
+            print(f"Successfully closed issue #{issue_number}")
+
+def write_summary(content):
+    """Write summary to GITHUB_STEP_SUMMARY if available."""
+    summary_file = os.environ.get('GITHUB_STEP_SUMMARY')
+    if summary_file:
+        try:
+            with open(summary_file, 'a') as f:
+                f.write(content)
+        except Exception as e:
+            print(f"WARNING: Could not write to step summary: {e}")
+    else:
+        print("Note: GITHUB_STEP_SUMMARY not set, skipping summary output")
 
 def main():
     # Check if this is a fork
@@ -262,9 +280,7 @@ def main():
     
     if not is_fork:
         print("ℹ️ Repository is not a fork - skipping GitHub Pages URL check")
-        with open(os.environ.get('GITHUB_STEP_SUMMARY', '/tmp/summary.md'), 'a') as f:
-            f.write("### Workflow Summary\n\n")
-            f.write("ℹ️ Repository is not a fork - skipping GitHub Pages URL check\n")
+        write_summary("### Workflow Summary\n\nℹ️ Repository is not a fork - skipping GitHub Pages URL check\n")
         return
     
     # Check GitHub Pages URL
@@ -286,21 +302,22 @@ def main():
         close_resolved_issues()
     
     # Write summary
-    with open(os.environ.get('GITHUB_STEP_SUMMARY', '/tmp/summary.md'), 'a') as f:
-        f.write("### Workflow Summary\n\n")
-        f.write(f"✅ Repository is a fork\n")
-        f.write(f"- **Parent Repository:** {parent_repo}\n\n")
-        
-        if result.get('needs_action'):
-            if result['issue_type'] == 'not_configured':
-                f.write("⚠️ **GitHub Pages not configured**\n")
-            else:
-                f.write("⚠️ **GitHub Pages URL needs update**\n")
-                f.write(f"- Current: {result.get('pages_url')}\n")
-                f.write(f"- Expected: {result.get('expected_url')}\n")
+    summary = "### Workflow Summary\n\n"
+    summary += f"✅ Repository is a fork\n"
+    summary += f"- **Parent Repository:** {parent_repo}\n\n"
+    
+    if result.get('needs_action'):
+        if result['issue_type'] == 'not_configured':
+            summary += "⚠️ **GitHub Pages not configured**\n"
         else:
-            f.write("✅ **GitHub Pages is correctly configured**\n")
-            f.write(f"- URL: {result.get('pages_url')}\n")
+            summary += "⚠️ **GitHub Pages URL needs update**\n"
+            summary += f"- Current: {result.get('pages_url')}\n"
+            summary += f"- Expected: {result.get('expected_url')}\n"
+    else:
+        summary += "✅ **GitHub Pages is correctly configured**\n"
+        summary += f"- URL: {result.get('pages_url')}\n"
+    
+    write_summary(summary)
 
 if __name__ == '__main__':
     main()
