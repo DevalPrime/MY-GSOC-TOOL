@@ -189,14 +189,13 @@ The workflow runs:
 
 ### GitHub Pages Configuration Check
 
-A helpful workflow that automatically checks if you've properly configured GitHub Pages for your fork:
+A simple workflow that checks if you've configured GitHub Pages correctly:
 
-- **Runs daily** at 6 AM UTC and on push to main branch
-- **Detects** if GitHub Pages is not configured or using the wrong URL
-- **Creates an issue** automatically to remind you to update your configuration
-- **Closes the issue** automatically once you've fixed the configuration
+- Runs daily at 6 AM UTC and on push to main
+- Creates an issue if Pages is not set up or using the wrong URL
+- Auto-closes the issue when fixed
 
-This ensures your dashboard is accessible at your own GitHub Pages URL (e.g., `https://YOUR-USERNAME.github.io/MY-GSOC-TOOL/`) instead of the default URL.
+Ensures your dashboard is at `https://YOUR-USERNAME.github.io/MY-GSOC-TOOL/` instead of the default URL.
 
 ### Manual Trigger
 
