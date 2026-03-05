@@ -1,10 +1,10 @@
 [
   {
-    "title": "Week 1: Getting Started",
-    "date": "2024-05-27",
-    "excerpt": "My journey begins! Set up the development environment and explored the codebase.",
-    "content": "<p>This is the full content of the Week 1 blog post. You can use HTML here to format your text.</p><p>I started by cloning the repository and setting up the dependencies. Then I explored the existing codebase to understand the architecture.</p>",
-    "readTime": "2 min read"
+    "title": "My First Steps into Open Source Security",
+    "date": "2026-02-27",
+    "excerpt": "My first steps into the world of open source security and contributing to OWASP BLT.",
+    "content": "<p>Starting my journey with OWASP BLT and learning about open source security practices.</p>",
+    "readTime": "5 min read"
   },
   {
     "title": "Week 2: Initial Analysis",
