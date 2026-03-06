@@ -18,7 +18,8 @@
       "https://github.com/OWASP-BLT/BLT-GitHub-App",
       "https://github.com/OWASP-BLT/BLT-Monitor",
       "https://github.com/OWASP-BLT/BLT-Next",
-      "https://github.com/OWASP-BLT/BLT-Lettuce"
+      "https://github.com/OWASP-BLT/BLT-Lettuce",
+      "https://github.com/OWASP-BLT/BLT-API"
     ]
   },
   "slack": {
