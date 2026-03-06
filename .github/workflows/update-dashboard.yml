@@ -19,8 +19,11 @@ permissions:
   id-token: write
 
 jobs:
-  fetch-github-contributions:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,18 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node scripts/fetch-github-data.js
-
-  deploy-to-pages:
-    needs: fetch-github-contributions
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
