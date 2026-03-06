@@ -12,6 +12,10 @@ on:
       - 'config.json'
       - 'data/**'
       - 'scripts/**'
+      - 'dashboard.js'
+      - 'index.html'
+      - 'assets/**'
+      - '.github/workflows/update-dashboard.yml'
 
 permissions:
   contents: read
